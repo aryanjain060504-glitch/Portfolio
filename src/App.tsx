@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, ReactNode } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 // --- Shared Components ---
 
-const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className = '' }) => (
+const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className = '' }: { children: ReactNode, delay?: number, duration?: number, x?: number, y?: number, className?: string }) => (
   <motion.div
     initial={{ opacity: 0, x, y }}
     whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -15,7 +15,7 @@ const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className 
   </motion.div>
 );
 
-const AnimatedText = ({ text, className = '' }) => {
+const AnimatedText = ({ text, className = '' }: { text: string, className?: string }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -24,7 +24,7 @@ const AnimatedText = ({ text, className = '' }) => {
 
   return (
     <p ref={ref} className={className}>
-      {text.split('').map((char, i) => {
+      {text.split('').map((char: string, i: number) => {
         const start = i / text.length;
         const end = start + (1 / text.length);
         const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
@@ -48,11 +48,11 @@ const ContactButton = () => (
     whileTap={{ scale: 0.95 }}
     transition={{ type: "spring", stiffness: 400, damping: 17 }}
     className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
-    Let&apos;s Connect
+    Let's Connect
   </motion.a>
 );
 
-const LiveProjectButton = ({ link }) => (
+const LiveProjectButton = ({ link }: { link: string }) => (
   <a href={link} target="_blank" rel="noreferrer" className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
     Live Project
   </a>
@@ -96,7 +96,7 @@ const HeroSection = () => (
           Engineering Mindset × Product Thinking × AI
         </p>
         <h1 className="hero-heading font-black uppercase tracking-tight leading-none text-[12vw] sm:text-[14vw] md:text-[10vw]">
-          Hi, i&apos;m Aryan Jain
+          Hi, i'm Aryan Jain
         </h1>
         <h2 className="text-[#D7E2EA] font-medium uppercase tracking-wide mt-6 text-xl sm:text-2xl md:text-4xl max-w-4xl mx-auto leading-tight">
           Build on <span className="text-[#BBCCD7]">evidence</span>, not <span className="line-through opacity-50">enthusiasm</span>.
@@ -235,19 +235,34 @@ const ExperienceSection = () => {
   );
 };
 
-const PrdButton = ({ link }) => (
+const PrdButton = ({ link }: { link: string }) => (
   <a href={link} target="_blank" rel="noreferrer" className="inline-block rounded-full border-2 border-[#BBCCD7] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#BBCCD7] font-medium uppercase tracking-widest hover:bg-[#BBCCD7]/10 transition-colors">
     View PRD
   </a>
 );
 
-const ViewDocButton = ({ link, label }) => (
+const ViewDocButton = ({ link, label }: { link: string, label: string }) => (
   <a href={link} target="_blank" rel="noreferrer" className="inline-block rounded-full border-2 border-[#BBCCD7] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#BBCCD7] font-medium uppercase tracking-widest hover:bg-[#BBCCD7]/10 transition-colors">
     View {label}
   </a>
 );
 
-const projectsData = [
+type Project = {
+  num: string;
+  type: string;
+  name: string;
+  link: string;
+  shortContent: string[];
+  details: {
+    prdLink?: string;
+    docxLink?: string;
+    pptxLink?: string;
+    summary: string;
+    content: string[];
+  };
+};
+
+const projectsData: Project[] = [
   {
     num: "01", type: "B2B SaaS", name: "SignalSpec", link: "https://signalspec-azure.vercel.app/",
     shortContent: [
@@ -312,7 +327,7 @@ const projectsData = [
   }
 ];
 
-const ProjectsSection = ({ onSelectProject }) => (
+const ProjectsSection = ({ onSelectProject }: { onSelectProject: (project: Project) => void }) => (
   <section id="projects" className="bg-[#111111] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-30 relative pt-20 pb-40 px-4 sm:px-6 md:px-10">
     <h2 className="hero-heading font-black uppercase text-center text-[clamp(3rem,8vw,160px)] mb-16">Projects</h2>
     <div className="max-w-7xl mx-auto space-y-32">
@@ -339,7 +354,7 @@ const ProjectsSection = ({ onSelectProject }) => (
             </div>
             
             <div className="flex flex-col gap-6 text-[#D7E2EA] max-w-4xl">
-              {proj.shortContent.map((pt, j) => {
+              {proj.shortContent.map((pt: string, j: number) => {
                 const [boldPart, ...rest] = pt.split(': ');
                 return (
                   <p key={j} className="text-lg leading-relaxed">
@@ -355,7 +370,7 @@ const ProjectsSection = ({ onSelectProject }) => (
   </section>
 );
 
-const ProjectDetailView = ({ project, onBack }) => {
+const ProjectDetailView = ({ project, onBack }: { project: Project, onBack: () => void }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -390,7 +405,7 @@ const ProjectDetailView = ({ project, onBack }) => {
         )}
 
         <div className="space-y-8">
-          {project.details?.content?.map((pt, j) => {
+          {project.details?.content?.map((pt: string, j: number) => {
             const [boldPart, ...rest] = pt.split(': ');
             return (
               <div key={j}>
@@ -494,7 +509,7 @@ const ContactSection = () => (
 );
 
 export default function App() {
-  const [activeProject, setActiveProject] = useState(null);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   if (activeProject) {
     return <ProjectDetailView project={activeProject} onBack={() => setActiveProject(null)} />;
