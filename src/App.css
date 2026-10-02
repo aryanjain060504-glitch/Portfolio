@@ -49,7 +49,7 @@ const ContactButton = () => (
     whileTap={{ scale: 0.95 }}
     transition={{ type: "spring", stiffness: 400, damping: 17 }}
     className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
-    Let&apos;s Connect
+    Let's Connect
   </motion.a>
 );
 
@@ -97,7 +97,7 @@ const HeroSection = () => (
           Engineering Mindset × Product Thinking × AI
         </p>
         <h1 className="hero-heading font-black uppercase tracking-tight leading-none text-[12vw] sm:text-[14vw] md:text-[10vw]">
-          Hi, i&apos;m Aryan Jain
+          Hi, i'm Aryan Jain
         </h1>
         <h2 className="text-[#D7E2EA] font-medium uppercase tracking-wide mt-6 text-xl sm:text-2xl md:text-4xl max-w-4xl mx-auto leading-tight">
           Build on <span className="text-[#BBCCD7]">evidence</span>, not <span className="line-through opacity-50">enthusiasm</span>.
