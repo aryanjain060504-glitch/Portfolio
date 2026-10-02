@@ -1,9 +1,9 @@
-import { useRef, useState, useEffect, ReactNode } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 // --- Shared Components ---
 
-const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className = '' }: { children: ReactNode, delay?: number, duration?: number, x?: number, y?: number, className?: string }) => (
+const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className = '' }: { children: any, delay?: number, duration?: number, x?: number, y?: number, className?: string }) => (
   <motion.div
     initial={{ opacity: 0, x, y }}
     whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -48,7 +48,7 @@ const ContactButton = () => (
     whileTap={{ scale: 0.95 }}
     transition={{ type: "spring", stiffness: 400, damping: 17 }}
     className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
-    Let's Connect
+    Let&apos;s Connect
   </motion.a>
 );
 
@@ -96,7 +96,7 @@ const HeroSection = () => (
           Engineering Mindset × Product Thinking × AI
         </p>
         <h1 className="hero-heading font-black uppercase tracking-tight leading-none text-[12vw] sm:text-[14vw] md:text-[10vw]">
-          Hi, i'm Aryan Jain
+          Hi, i&apos;m Aryan Jain
         </h1>
         <h2 className="text-[#D7E2EA] font-medium uppercase tracking-wide mt-6 text-xl sm:text-2xl md:text-4xl max-w-4xl mx-auto leading-tight">
           Build on <span className="text-[#BBCCD7]">evidence</span>, not <span className="line-through opacity-50">enthusiasm</span>.
@@ -192,27 +192,22 @@ const ExperienceSection = () => {
     target: ref,
     offset: ["start center", "end center"]
   });
-  // The ball moves from the top (0%) to the bottom (100%) of the timeline
   const ballY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
     <section id="experience" className="bg-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-20 relative pt-20 pb-20 px-5 sm:px-8 md:px-10">
       <h2 className="hero-heading font-black uppercase text-center text-[clamp(3rem,8vw,160px)] mb-16">Experience</h2>
       <div className="max-w-5xl mx-auto flex relative" ref={ref}>
-        {/* Continuous Timeline Line */}
         <div className="absolute left-[8px] sm:left-[16px] top-0 bottom-0 w-[2px] bg-[#D7E2EA]/20" />
-        
-        {/* 3D Sliding Ball */}
         <motion.div 
           className="absolute left-[9px] sm:left-[17px] w-5 h-5 rounded-full -translate-x-1/2 z-10"
           style={{ 
             top: ballY,
-            y: "-50%", // Centers the ball vertically relative to its top position
+            y: "-50%",
             background: 'radial-gradient(circle at 35% 35%, #FFFFFF, #646973)',
             boxShadow: '0 4px 10px rgba(0,0,0,0.8), inset -2px -2px 6px rgba(0,0,0,0.4)'
           }}
         />
-
         <div className="space-y-16 pl-10 sm:pl-16 w-full pb-4">
           {experiences.map((exp, i) => (
             <FadeIn key={i} delay={0.1}>
