@@ -60,7 +60,8 @@ const LiveProjectButton = ({ link }: { link: string }) => (
 
 const ResumeButton = () => (
   <motion.a 
-    href="https://drive.google.com/file/d/1t1zpi58-TJ9_QZigXGMYQc_5oLy4aVbI/view?usp=sharing" target="_blank" rel="noreferrer" 
+    href="https://drive.google.com/file/d/1KPJuCcFxzbzl1YB6x7VMQ7xIBbsRAUQ1/view?usp=sharing
+" target="_blank" rel="noreferrer" 
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
     transition={{ type: "spring", stiffness: 400, damping: 17 }}
