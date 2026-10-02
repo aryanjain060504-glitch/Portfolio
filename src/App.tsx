@@ -1,0 +1,515 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+
+// --- Shared Components ---
+
+const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className = '' }) => (
+  <motion.div
+    initial={{ opacity: 0, x, y }}
+    whileInView={{ opacity: 1, x: 0, y: 0 }}
+    viewport={{ once: true, margin: "50px", amount: 0 }}
+    transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+);
+
+const AnimatedText = ({ text, className = '' }) => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start 0.8', 'end 0.2']
+  });
+
+  return (
+    <p ref={ref} className={className}>
+      {text.split('').map((char, i) => {
+        const start = i / text.length;
+        const end = start + (1 / text.length);
+        const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+        return (
+          <span key={i} className="relative inline-block">
+            <span className="invisible">{char === ' ' ? '\u00A0' : char}</span>
+            <motion.span className="absolute left-0 top-0" style={{ opacity }}>
+              {char === ' ' ? '\u00A0' : char}
+            </motion.span>
+          </span>
+        );
+      })}
+    </p>
+  );
+};
+
+const ContactButton = () => (
+  <motion.a 
+    href="#contact"
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
+    Let&apos;s Connect
+  </motion.a>
+);
+
+const LiveProjectButton = ({ link }) => (
+  <a href={link} target="_blank" rel="noreferrer" className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
+    Live Project
+  </a>
+);
+
+const ResumeButton = () => (
+  <motion.a 
+    href="https://drive.google.com/file/d/1t1zpi58-TJ9_QZigXGMYQc_5oLy4aVbI/view?usp=sharing" target="_blank" rel="noreferrer" 
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base text-[#D7E2EA] font-medium uppercase tracking-widest hover:bg-[#D7E2EA]/10 transition-colors">
+    View Resume
+  </motion.a>
+);
+
+// --- Sections ---
+
+const HeroSection = () => (
+  <section className="min-h-screen flex flex-col relative px-6 md:px-10">
+    <FadeIn delay={0} y={-20}>
+      <nav className="flex flex-wrap gap-4 justify-center md:justify-between pt-6 md:pt-8 text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-base lg:text-[1.1rem]">
+        {['About', 'Approach', 'Experience', 'Projects', 'Skills', 'Education'].map((item) => (
+          <motion.a 
+            key={item}
+            href={`#${item.toLowerCase()}`} 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="hover:text-white transition-colors duration-200"
+          >
+            {item}
+          </motion.a>
+        ))}
+      </nav>
+    </FadeIn>
+
+    <div className="flex-1 flex flex-col justify-center items-center text-center py-20">
+      <FadeIn delay={0.15} y={40} className="w-full">
+        <p className="text-[#D7E2EA]/60 uppercase tracking-widest mb-4 font-semibold text-sm sm:text-base">
+          Engineering Mindset × Product Thinking × AI
+        </p>
+        <h1 className="hero-heading font-black uppercase tracking-tight leading-none text-[12vw] sm:text-[14vw] md:text-[10vw]">
+          Hi, i&apos;m Aryan Jain
+        </h1>
+        <h2 className="text-[#D7E2EA] font-medium uppercase tracking-wide mt-6 text-xl sm:text-2xl md:text-4xl max-w-4xl mx-auto leading-tight">
+          Build on <span className="text-[#BBCCD7]">evidence</span>, not <span className="line-through opacity-50">enthusiasm</span>.
+        </h2>
+      </FadeIn>
+      
+      <FadeIn delay={0.35} y={20} className="mt-12 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
+        <ContactButton />
+        <ResumeButton />
+      </FadeIn>
+    </div>
+  </section>
+);
+
+const AboutSection = () => (
+  <section id="about" className="min-h-screen relative px-5 sm:px-8 md:px-10 py-20 flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center z-10 gap-10 sm:gap-14 md:gap-16">
+      <FadeIn delay={0} y={40}>
+        <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[clamp(3rem,12vw,160px)]">About me</h2>
+      </FadeIn>
+      <AnimatedText 
+        text="I start with the problem, not the solution. I talk to users, define what's actually broken, decide what matters most, and align the team to build it. I use AI to research faster, write sharper specs, and iterate quickly." 
+        className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[600px] text-[clamp(1.2rem,2.5vw,1.75rem)]" 
+      />
+    </div>
+  </section>
+);
+
+const ApproachSection = () => {
+  const approaches = [
+    { num: "01", title: "Discover", desc: "Understand the real problem before proposing anything." },
+    { num: "02", title: "Frame", desc: "Write the problem so the whole team agrees on what we're solving." },
+    { num: "03", title: "Prioritize", desc: "Choose the few things that move the metric, and say no to the rest." },
+    { num: "04", title: "Align", desc: "Keep design, engineering, and stakeholders working toward one goal." },
+    { num: "05", title: "Ship and Learn", desc: "Use AI to move from idea to test faster, then measure the result." }
+  ];
+
+  return (
+    <section id="approach" className="bg-[#FFFFFF] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-10">
+      <h2 className="text-[#0C0C0C] font-black uppercase text-center text-[clamp(3rem,12vw,160px)] mb-16 sm:mb-20 md:mb-28">Approach</h2>
+      <div className="max-w-5xl mx-auto flex flex-col">
+        {approaches.map((svc, i) => (
+          <FadeIn key={i} delay={i * 0.1}>
+            <div className="flex flex-col md:flex-row md:items-center py-8 sm:py-10 md:py-12 border-t border-[rgba(12,12,12,0.15)] last:border-b">
+              <span className="text-[#0C0C0C] font-black text-[clamp(3rem,10vw,140px)] leading-none md:w-1/3 mb-4 md:mb-0">{svc.num}</span>
+              <div className="flex flex-col md:w-2/3">
+                <h3 className="text-[#0C0C0C] font-medium uppercase text-[clamp(1rem,2.2vw,2.1rem)] mb-2">{svc.title}</h3>
+                <p className="text-[#0C0C0C] font-light leading-relaxed max-w-2xl text-[clamp(0.85rem,1.6vw,1.25rem)] opacity-60">{svc.desc}</p>
+              </div>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const ExperienceSection = () => {
+  const experiences = [
+    {
+      title: "Jindal Steel Ltd. | Student Intern",
+      date: "Patratu · January 2026 to July 2026",
+      points: [
+        "Problem discovery: Analyzed Wire Rod Mill workflows and operational data to find where production was delayed and where capacity was constrained.",
+        "Prioritization: Worked with plant engineers and senior leadership to rank bottlenecks by impact and decide which fixes to pursue first.",
+        "Solution design: Built process redesign frameworks that improved production flow and operational efficiency.",
+        "Outcome: Reduced production bottlenecks by 1."
+      ]
+    },
+    {
+      title: "Skretting India | Engineering & Operations Intern",
+      date: "Surat · June 2025 to July 2025",
+      points: [
+        "Process mapping: Mapped maintenance and production workflows across multiple equipment lines and identified 3+ recurring bottlenecks affecting plant uptime.",
+        "Cross-functional analysis: Studied the handoffs between maintenance, procurement, and QA, and uncovered communication gaps that reduced efficiency.",
+        "Recommendations: Used root-cause analysis and on-ground observation to propose changes that improved information flow and workflow visibility.",
+        "Scale context: Worked within a manufacturing organization operating across 30+ countries, applying systems thinking to find friction points and recommend scalable improvements."
+      ]
+    },
+    {
+      title: "SAE India Collegiate Club, MNNIT | Member",
+      date: "April 2023 to May 2026",
+      points: [
+        "Cross-functional delivery: Worked in a 20+ member team across design, manufacturing, and operations to build prototypes from ideation to execution.",
+        "Execution management: Managed timelines and deliverables and kept communication clear between contributors, reducing delays across project stages.",
+        "Problem framing: Applied structured problem-framing to engineering challenges so the team could identify constraints and reach solutions faster."
+      ]
+    }
+  ];
+
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start center", "end center"]
+  });
+  // The ball moves from the top (0%) to the bottom (100%) of the timeline
+  const ballY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  return (
+    <section id="experience" className="bg-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-20 relative pt-20 pb-20 px-5 sm:px-8 md:px-10">
+      <h2 className="hero-heading font-black uppercase text-center text-[clamp(3rem,8vw,160px)] mb-16">Experience</h2>
+      <div className="max-w-5xl mx-auto flex relative" ref={ref}>
+        {/* Continuous Timeline Line */}
+        <div className="absolute left-[8px] sm:left-[16px] top-0 bottom-0 w-[2px] bg-[#D7E2EA]/20" />
+        
+        {/* 3D Sliding Ball */}
+        <motion.div 
+          className="absolute left-[9px] sm:left-[17px] w-5 h-5 rounded-full -translate-x-1/2 z-10"
+          style={{ 
+            top: ballY,
+            y: "-50%", // Centers the ball vertically relative to its top position
+            background: 'radial-gradient(circle at 35% 35%, #FFFFFF, #646973)',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.8), inset -2px -2px 6px rgba(0,0,0,0.4)'
+          }}
+        />
+
+        <div className="space-y-16 pl-10 sm:pl-16 w-full pb-4">
+          {experiences.map((exp, i) => (
+            <FadeIn key={i} delay={0.1}>
+              <div>
+                <h3 className="text-[#D7E2EA] font-semibold text-2xl sm:text-3xl mb-2">{exp.title}</h3>
+                <p className="text-[#D7E2EA]/60 uppercase tracking-widest text-sm mb-6">{exp.date}</p>
+                <ul className="space-y-4">
+                  {exp.points.map((pt, j) => (
+                    <li key={j} className="text-[#D7E2EA] font-light leading-relaxed text-lg">
+                      <span className="font-medium mr-2">—</span> {pt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const PrdButton = ({ link }) => (
+  <a href={link} target="_blank" rel="noreferrer" className="inline-block rounded-full border-2 border-[#BBCCD7] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#BBCCD7] font-medium uppercase tracking-widest hover:bg-[#BBCCD7]/10 transition-colors">
+    View PRD
+  </a>
+);
+
+const ViewDocButton = ({ link, label }) => (
+  <a href={link} target="_blank" rel="noreferrer" className="inline-block rounded-full border-2 border-[#BBCCD7] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#BBCCD7] font-medium uppercase tracking-widest hover:bg-[#BBCCD7]/10 transition-colors">
+    View {label}
+  </a>
+);
+
+const projectsData = [
+  {
+    num: "01", type: "B2B SaaS", name: "SignalSpec", link: "https://signalspec-azure.vercel.app/",
+    shortContent: [
+      "Problem: Small SaaS teams have plenty of customer feedback but no fast way to turn it into a build decision.",
+      "Solution: SignalSpec turns competitor reviews into evidence-backed, scored opportunities and then into a ready PRD.",
+      "Key decision: Evidence comes first. Every opportunity links to real reviews.",
+      "Validation: A concierge MVP with 5 to 10 founders comes before any automation."
+    ],
+    details: {
+      prdLink: "https://file.notion.com/f/f/6b1b3177-31b7-8116-94a4-0003e1150061/3283916e-0a27-4254-bc80-0d74de5a6a27/SignalSpec.pdf?table=block&id=3e0b3177-31b7-8082-8040-fb763d3a2170&spaceId=6b1b3177-31b7-8116-94a4-0003e1150061&expirationTimestamp=1790899200000&signature=KvnJS0WBjcFau8TfPpZdjS046PCyoW91PKtHiWhOzq4&downloadName=SignalSpec.pdf",
+      summary: "SignalSpec is an AI-powered product discovery tool for indie SaaS founders and small product teams. A founder uploads competitor or customer reviews, and SignalSpec detects sentiment, clusters recurring complaints into pain points, and converts them into scored product opportunities. The founder then picks an opportunity and generates a PRD from it.",
+      content: [
+        "Problem: Founders without a research team have to copy reviews into spreadsheets, read hundreds of comments, group them by hand, judge their importance, and then write a spec. The process is slow and inconsistent.",
+        "Differentiation: SignalSpec doesn't compete on \"better AI.\" It competes on covering the whole path from evidence to problem to opportunity to decision to PRD, which is stronger than isolated review analysis.",
+        "Product principles: Evidence before recommendation. Never fabricate evidence. Keep a human in the loop. Show what customers said, what the system thinks it means, and what could be built.",
+        "Scope: P0 covers auth, projects, CSV import, analysis, evidence mapping, PRD generation. P1 adds app store integrations. Non-goals include replacing Jira or PMs.",
+        "Success measurement: The North Star is Validated Product Opportunities Generated. Validation targets are 10 interviews, 5 completed workflows, 3 real product decisions.",
+        "Roadmap: Validation → Foundation → Intelligence → PRD → Validation Launch → Expansion."
+      ]
+    }
+  },
+  {
+    num: "02", type: "Consumer", name: "InFit (LinkedIn Job Section Redesign)", link: "https://aryanjain060504-glitch.github.io/ai-job-seeker/",
+    shortContent: [
+      "Problem: Job seekers read every job description just to find a fit, and they distrust AI recommendations they can't understand.",
+      "Solution: A LinkedIn Jobs redesign called InFit, with a resume auto-parser, an adjustable match threshold, and a match score whose formula candidates can inspect.",
+      "Validation: A 5-day design sprint that ends with 5 candidate interviews to test trust and application intent."
+    ],
+    details: {
+      docxLink: "https://docs.google.com/document/d/12Oyz5wBROk8YX1aFt1yMxUVu-Vv_ngMm/edit?usp=sharing&ouid=113959462886212150122&rtpof=true&sd=true",
+      pptxLink: "https://docs.google.com/presentation/d/1pf3CIUqAZKFMpJl4OlxmvoUSVdLfajDO/edit?usp=sharing&ouid=113959462886212150122&rtpof=true&sd=true",
+      summary: "LinkedIn Job Section Redesign & AI Concept is a product management case study that turns LinkedIn Jobs from a passive list into an interactive, inspectable match engine.",
+      content: [
+        "Problem: Candidates have to read every job description and then work out which roles suit their resume, skills, and education, taking a lot of time. Platforms hide how they rank roles, so candidates don't trust the recommendations.",
+        "Solution: A three-pane interface. Left: Auto-parser turns a resume into a persona. Center: Threshold controls filter out low-fit roles (e.g. 85%+). Right: The InFit transparency panel shows the score breakdown, formula, and actionable tips.",
+        "Key trade-offs: Exposing the formula builds trust and provides actionable items. Sliders let candidates prioritize skill fit over rigid years-of-experience requirements. The stated aim is radical transparency without hurting usability.",
+        "Validation Plan: A 5-day design sprint covering problem mapping, alternative sketching, storyboarding, Figma prototyping, and 5 candidate interviews.",
+        "Target metrics: Candidate trust score of 4.2 out of 5 or higher. Over 65% of active users interacting with sliders and formula. 30% higher application conversion on high-fit roles."
+      ]
+    }
+  },
+  {
+    num: "03", type: "Marketplace", name: "Airbnb Personalize Search Ranking", link: "#",
+    shortContent: [
+      "Problem: Two guests can search the same destination and dates and still want very different listings, so ranking them identically wastes their time.",
+      "Solution: An MVP that improves Airbnb's existing search ranking with a few high-value signals: search context, filters, price, listing quality, and recent interactions.",
+      "Approach: I ran the full product development cycle: feasibility questions, backlog, a 2-week sprint, an A/B experiment, and reprioritization under pressure."
+    ],
+    details: {
+      docxLink: "https://docs.google.com/document/d/1n4f0DNKOpCHgVtAEdA1tmk5frbmFanHf/edit?usp=sharing&ouid=113959462886212150122&rtpof=true&sd=true",
+      pptxLink: "https://docs.google.com/presentation/d/1LAsZCvYw8nA9wYL5-BWCWBS-hf9slFFA/edit?usp=sharing&ouid=113959462886212150122&rtpof=true&sd=true",
+      summary: "Airbnb Personalized Search Ranking is an independent product management case study on the product development process. It shows how a PM takes a real product challenge from problem to experiment, and it's built on Airbnb's public information, not work done for Airbnb.",
+      content: [
+        "Problem: The challenge isn't finding available listings. It's deciding which listings are most relevant to this particular guest and should appear first. The ranking has to balance guest relevance, marketplace diversity, booking outcomes, performance, new-user experience, and new-listing visibility.",
+        "Approach: Covered Feasibility (data needs, tech constraints, questions for Eng/DS), Execution (prioritized backlog, user stories, 2-week sprint), and Experiment design (control vs. treatment with guardrails).",
+        "Key decision: Enhance the existing ranking with a limited set of signals instead of building new search infrastructure to lower technical risk.",
+        "Reprioritization scenarios: Addressed edge cases like missing guest data, engineering capacity drops, and booking/diversity tradeoffs to protect the sprint goal.",
+        "Decision framework: Results map directly to actions (e.g., Conversion up with healthy guardrails = scale gradually; Conversion flat = investigate signals).",
+        "Takeaway: The PM's job is to protect the product goal, not the original plan. Decisions should come from experiment evidence, not assumptions."
+      ]
+    }
+  }
+];
+
+const ProjectsSection = ({ onSelectProject }) => (
+  <section id="projects" className="bg-[#111111] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-30 relative pt-20 pb-40 px-4 sm:px-6 md:px-10">
+    <h2 className="hero-heading font-black uppercase text-center text-[clamp(3rem,8vw,160px)] mb-16">Projects</h2>
+    <div className="max-w-7xl mx-auto space-y-32">
+      {projectsData.map((proj, i) => (
+        <div key={i} className="sticky" style={{ top: `${96 + i * 28}px`, zIndex: i }}>
+          <div className="bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] p-6 sm:p-10 md:p-12 flex flex-col gap-10 w-full shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
+                <span className="text-[#D7E2EA] font-black text-[clamp(3rem,8vw,100px)] leading-none">{proj.num}</span>
+                <div>
+                  <p className="text-[#D7E2EA]/60 uppercase tracking-widest text-sm mb-1">{proj.type}</p>
+                  <h3 className="text-[#D7E2EA] font-medium text-[clamp(1.5rem,3vw,3rem)] leading-tight">{proj.name}</h3>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                {proj.link !== "#" && <LiveProjectButton link={proj.link} />}
+                <button 
+                  onClick={() => onSelectProject(proj)}
+                  className="inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base text-[#0C0C0C] bg-[#D7E2EA] font-bold uppercase tracking-widest hover:opacity-80 transition-opacity"
+                >
+                  View Case Study
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-6 text-[#D7E2EA] max-w-4xl">
+              {proj.shortContent.map((pt, j) => {
+                const [boldPart, ...rest] = pt.split(': ');
+                return (
+                  <p key={j} className="text-lg leading-relaxed">
+                    <strong className="text-white font-semibold">{boldPart}:</strong> {rest.join(': ')}
+                  </p>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const ProjectDetailView = ({ project, onBack }) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#0C0C0C] text-[#D7E2EA] px-6 py-12 md:py-20 flex flex-col items-center">
+      <div className="w-full max-w-4xl">
+        <button 
+          onClick={onBack}
+          className="flex items-center gap-2 text-[#D7E2EA]/60 hover:text-[#D7E2EA] uppercase tracking-widest text-sm font-semibold mb-12 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back to Portfolio
+        </button>
+
+        <p className="text-[#D7E2EA]/60 uppercase tracking-widest text-sm mb-2 font-medium">{project.type}</p>
+        <h1 className="hero-heading font-black uppercase text-[clamp(2.5rem,6vw,80px)] leading-none tracking-tight mb-8">
+          {project.name}
+        </h1>
+
+        <div className="flex flex-wrap gap-4 mb-12">
+          {project.link !== "#" && <LiveProjectButton link={project.link} />}
+          {project.details?.prdLink && <PrdButton link={project.details.prdLink} />}
+          {project.details?.docxLink && <ViewDocButton link={project.details.docxLink} label="DOCX" />}
+          {project.details?.pptxLink && <ViewDocButton link={project.details.pptxLink} label="PPT" />}
+        </div>
+
+        {project.details?.summary && (
+          <p className="text-xl sm:text-2xl text-white font-medium mb-12 border-l-4 border-[#D7E2EA] pl-6 leading-relaxed">
+            {project.details.summary}
+          </p>
+        )}
+
+        <div className="space-y-8">
+          {project.details?.content?.map((pt, j) => {
+            const [boldPart, ...rest] = pt.split(': ');
+            return (
+              <div key={j}>
+                <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">{boldPart}</h3>
+                <p className="text-lg leading-relaxed text-[#D7E2EA]/90">{rest.join(': ')}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SkillsSection = () => {
+  const skills = [
+    "Product Discovery", "Product Framing", "Road mapping & Planning",
+    "Root Cause Analysis", "Workflow & Process Planning", "Product Redesign",
+    "Jira", "AI for Product Management", "Communication", "Teamwork",
+    "Problem Solving", "Time Management", "Adaptability"
+  ];
+
+  return (
+    <section id="skills" className="bg-[#FFFFFF] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-[35]">
+      <h2 className="text-[#0C0C0C] font-black uppercase text-center text-[clamp(3rem,8vw,160px)] mb-12 sm:mb-16">Skills</h2>
+      <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-4 sm:gap-6">
+        {skills.map((skill, i) => (
+          <FadeIn key={i} delay={i * 0.05}>
+            <span className="inline-block px-6 py-3 border-2 border-[#0C0C0C] rounded-full text-[#0C0C0C] font-medium uppercase tracking-widest text-sm sm:text-base hover:bg-[#0C0C0C] hover:text-[#FFFFFF] transition-colors cursor-default">
+              {skill}
+            </span>
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const EducationCertificationsSection = () => (
+  <section id="education" className="bg-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-40 relative pt-20 pb-32 px-5 sm:px-8 md:px-10 flex flex-col lg:flex-row gap-16 justify-center max-w-7xl mx-auto">
+    <div className="flex-1">
+      <h2 className="hero-heading font-black uppercase text-[clamp(2.5rem,5vw,80px)] mb-10">Education</h2>
+      <div className="border-l-2 border-[#D7E2EA] pl-6">
+        <h3 className="text-[#D7E2EA] font-semibold text-2xl mb-2">Bachelor of Technology - Mechanical Engineering</h3>
+        <p className="text-[#D7E2EA]/80 text-lg mb-2">Motilal Nehru National Institute of Technology, Prayagraj Uttar Pradesh</p>
+        <p className="text-[#D7E2EA]/60 uppercase tracking-widest text-sm">November 2022 - July 2026</p>
+      </div>
+    </div>
+    
+    <div className="flex-1">
+      <h2 className="hero-heading font-black uppercase text-[clamp(2.5rem,5vw,80px)] mb-10">Certifications</h2>
+      <ul className="space-y-8">
+        <li className="border-l-2 border-[#D7E2EA] pl-6">
+          <h3 className="text-[#D7E2EA] font-semibold text-xl mb-1">
+            <a href="https://www.credly.com/badges/92ba4e32-3360-440b-aa53-ca6dbde7e58f/public_url" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white hover:underline transition-all">
+              AI for product management (Pendo.io)
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </h3>
+          <p className="text-[#D7E2EA]/60 text-sm uppercase tracking-widest mb-2">Issued Mar 2026</p>
+          <p className="text-[#D7E2EA] font-light">Skills: AI product Management, Product Development</p>
+        </li>
+        <li className="border-l-2 border-[#D7E2EA] pl-6">
+          <h3 className="text-[#D7E2EA] font-semibold text-xl mb-1">
+            <a href="https://verify.skilljar.com/c/borbvwtbga5y" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white hover:underline transition-all">
+              Claude Code in Action (Anthropic)
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </h3>
+          <p className="text-[#D7E2EA]/60 text-sm uppercase tracking-widest mb-2">Issued Mar 2026</p>
+          <p className="text-[#D7E2EA] font-light">Skills: Using AI to Build Prototype</p>
+        </li>
+        <li className="border-l-2 border-[#D7E2EA] pl-6">
+          <h3 className="text-[#D7E2EA] font-semibold text-xl mb-1">
+            <a href="https://www.coursera.org/account/accomplishments/records/27VP4DEOLXCE" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white hover:underline transition-all">
+              Automate tasks and processes with Jira (Coursera)
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </h3>
+          <p className="text-[#D7E2EA]/60 text-sm uppercase tracking-widest mb-2">Issued Mar 2026</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+);
+
+const ContactSection = () => (
+  <section id="contact" className="bg-[#FFFFFF] text-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 z-50 relative pt-20 pb-32 px-5 sm:px-8 md:px-10 flex flex-col items-center justify-center text-center">
+    <h2 className="font-black uppercase text-[clamp(2.5rem,5vw,80px)] mb-8">Let's Connect</h2>
+    <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
+      <a href="mailto:aryanjain1916@gmail.com" className="flex items-center gap-3 font-medium text-lg sm:text-xl hover:opacity-70 transition-opacity">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        aryanjain1916@gmail.com
+      </a>
+      <a href="http://linkedin.com/in/aryan-jain-64b781259" target="_blank" rel="noreferrer" className="flex items-center gap-3 font-medium text-lg sm:text-xl hover:opacity-70 transition-opacity">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn Profile
+      </a>
+    </div>
+  </section>
+);
+
+export default function App() {
+  const [activeProject, setActiveProject] = useState(null);
+
+  if (activeProject) {
+    return <ProjectDetailView project={activeProject} onBack={() => setActiveProject(null)} />;
+  }
+
+  return (
+    <main className="bg-[#0C0C0C] min-h-screen text-[#D7E2EA]">
+      <HeroSection />
+      <AboutSection />
+      <ApproachSection />
+      <ExperienceSection />
+      <ProjectsSection onSelectProject={setActiveProject} />
+      <SkillsSection />
+      <EducationCertificationsSection />
+      <ContactSection />
+    </main>
+  );
+}
